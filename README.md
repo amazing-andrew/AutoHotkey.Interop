@@ -53,3 +53,15 @@ ahk.ExecRaw(@"SayHello(""Mario"") ");
 
 ```
 
+
+
+
+Links
+=============
+
+[HotKeyIt's AutoHotkey_H Github Repository](https://github.com/HotKeyIt/ahkdll)  
+[AutoHotKey_H Dll Documentation](http://www.autohotkey.net/~HotKeyIt/AutoHotkey/files/AutoHotkey-dll-txt.html)  
+
+
+
+
