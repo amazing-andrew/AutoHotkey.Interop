@@ -3,9 +3,9 @@ AutoHotkey.Interop
 
 This project is a basic wrapper around [HotKeyIt's AHKDLL](https://github.com/HotKeyIt/ahkdll) (aka **AutoHotkey_H**) for .Net Projects.
 
-This program requires the AutoHotkey.dll (Unicode Version) from AutoHotKey.dll.However, These dlls are packaged inside and can be deployed automatically if they are missing. 
+The was made to be intended to use as is, without needing to register any of the com components or any other special deployment tasks. The required (AutoHotkey_H) AutoHotkey.dll file can be deployed via XCOPY. The application can automatically deploy the required AutoHotkey.dll file if it is missing, as it stores a copy as an embeded resource.
 
-
+All the thanks goes to HotKeyIt's work 
 
 Usage & Examples
 ====================
