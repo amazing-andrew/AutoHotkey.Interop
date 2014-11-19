@@ -47,6 +47,11 @@ namespace Example
             //execute's newly made function\
             ahk.ExecRaw(@"SayHello(""Mario"") ");
 
+
+            //execute a function (in functions.ahk) that adds 5 and return results
+            var add5Results = ahk.Eval("Add5( 5 )");
+            Console.WriteLine("Result of 5 with Add5 Method is {0}", add5Results);
+
             
             Console.WriteLine("Press enter to exit...");
             Console.ReadLine();

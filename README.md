@@ -50,6 +50,10 @@ ahk.ExecRaw(sayHelloFunction);
 //execute's newly made function\
 ahk.ExecRaw(@"SayHello(""Mario"") ");
 
+//execute a function that adds 5 and return results
+var add5Results = ahk.Eval("Add5( 5 )");
+Console.WriteLine("Result of 5 with Add5 Method is {0}", add5Results);
+
 
 ```
 

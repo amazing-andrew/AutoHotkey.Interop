@@ -6,6 +6,13 @@ MyFunction(str1, str2)
 }
 
 
+Add5(x)
+{
+	return x + 5
+}
+
+
+
 DOSTUFF:
 	MsgBox, Do stuff label has been ran!
 return 
