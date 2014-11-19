@@ -113,7 +113,7 @@ namespace AutoHotkey.Interop
         /// <param name="param8">The 8th parameter</param>
         /// <param name="param9">The 9th parameter</param>
         /// <param name="param10">The 10 parameter</param>
-        public void ExecFunction(string functionName,
+        public string ExecFunction(string functionName,
             string param1 = null,
             string param2 = null,
             string param3 = null,
@@ -125,7 +125,12 @@ namespace AutoHotkey.Interop
             string param9 = null,
             string param10 = null)
         {
-            AutoHotkeyDll.ahkFunction(functionName, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+            IntPtr ret = AutoHotkeyDll.ahkFunction(functionName, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+
+            if (ret == IntPtr.Zero)
+                return null;
+            else
+                return Marshal.PtrToStringUni(ret);
         }
 
 

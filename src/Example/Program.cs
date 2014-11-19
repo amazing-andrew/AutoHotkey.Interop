@@ -50,7 +50,11 @@ namespace Example
 
             //execute a function (in functions.ahk) that adds 5 and return results
             var add5Results = ahk.Eval("Add5( 5 )");
-            Console.WriteLine("Result of 5 with Add5 Method is {0}", add5Results);
+            Console.WriteLine("Eval: Result of 5 with Add5 func is {0}", add5Results);
+
+            //you can also return results with the ExecFunction 
+            add5Results = ahk.ExecFunction("Add5", "5");
+            Console.WriteLine("ExecFunction: Result of 5 with Add5 func is {0}", add5Results);
 
             
             Console.WriteLine("Press enter to exit...");
