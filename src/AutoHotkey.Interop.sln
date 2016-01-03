@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoHotkey.Interop", "AutoHotkey.Interop\AutoHotkey.Interop.csproj", "{2869DBFE-7762-4930-95EA-2B0C111CF353}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{CAE59508-5BEC-4130-8927-B92CD3B368AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoHotkey.Interop.Tests", "AutoHotkey.Interop.Tests\AutoHotkey.Interop.Tests.csproj", "{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{CAE59508-5BEC-4130-8927-B92CD3B368AC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CAE59508-5BEC-4130-8927-B92CD3B368AC}.Release|x64.ActiveCfg = Release|x64
 		{CAE59508-5BEC-4130-8927-B92CD3B368AC}.Release|x64.Build.0 = Release|x64
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Debug|x64.Build.0 = Debug|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Release|x64.ActiveCfg = Release|Any CPU
+		{EE15E94F-45FD-4A6A-9FA3-83FD9E37F86B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

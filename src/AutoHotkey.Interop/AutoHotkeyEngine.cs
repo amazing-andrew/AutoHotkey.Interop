@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoHotkey.Interop.Util;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,12 +14,11 @@ namespace AutoHotkey.Interop
     /// </summary>
     public class AutoHotkeyEngine
     {
-        public AutoHotkeyEngine()
-        {
-            Util.EnsureAutoHotkeyLoaded();
-
-            //ensure that a thread is started
-            AutoHotkeyDll.ahktextdll("", "", ""); 
+        public AutoHotkeyEngine() {
+            using(new CurrentDirectorySaver()) {
+                Util.AutoHotkeyDllLoader.EnsureDllIsLoaded();
+                AutoHotkeyDll.ahktextdll("", "", "");
+            }
         }
 
         /// <summary>
@@ -28,8 +28,10 @@ namespace AutoHotkey.Interop
         /// <returns>Returns the value of the variable, or an empty string if the variable does not exist.</returns>
         public string GetVar(string variableName)
         {
-            var p = AutoHotkeyDll.ahkgetvar(variableName, 0);
-            return Marshal.PtrToStringUni(p);
+            using (new CurrentDirectorySaver()) {
+                var p = AutoHotkeyDll.ahkgetvar(variableName, 0);
+                return Marshal.PtrToStringUni(p);
+            }
         }
 
         /// <summary>
@@ -39,10 +41,12 @@ namespace AutoHotkey.Interop
         /// <param name="value">The value to set.</param>
         public void SetVar(string variableName, string value)
         {
-            if (value == null)
-                value = "";
+            using (new CurrentDirectorySaver()) {
+                if (value == null)
+                    value = "";
 
-            AutoHotkeyDll.ahkassign(variableName, value);
+                AutoHotkeyDll.ahkassign(variableName, value);
+            }
         }
 
         /// <summary>
@@ -52,18 +56,21 @@ namespace AutoHotkey.Interop
         /// <returns>Returns the result of an expression</returns>
         public string Eval(string code)
         {
-            var codeToRun = "A__EVAL:=" + code;
-            AutoHotkeyDll.ahkExec(codeToRun);
-            return GetVar("A__EVAL");
+            using (new CurrentDirectorySaver()) {
+                var codeToRun = "A__EVAL:=" + code;
+                AutoHotkeyDll.ahkExec(codeToRun);
+                return GetVar("A__EVAL");
+            }
         }
 
         /// <summary>
         /// Loads a file into the running script
         /// </summary>
         /// <param name="filePath">The filepath of the script</param>
-        public void Load(string filePath)
-        {
-            AutoHotkeyDll.addFile(filePath, 1, 1);
+        public void Load(string filePath) {
+            using (new CurrentDirectorySaver()) {
+                AutoHotkeyDll.addFile(filePath, 1, 1);
+            }
         }
 
         /// <summary>
@@ -72,7 +79,9 @@ namespace AutoHotkey.Interop
         /// <param name="code">The code to execute</param>
         public void ExecRaw(string code)
         {
-            AutoHotkeyDll.ahkExec(code);
+            using (new CurrentDirectorySaver()) {
+                AutoHotkeyDll.ahkExec(code);
+            }
         }
 
         /// <summary>
@@ -80,7 +89,17 @@ namespace AutoHotkey.Interop
         /// </summary>
         public void Terminate()
         {
-            AutoHotkeyDll.ahkTerminate(1000);
+            using (new CurrentDirectorySaver()) {
+                AutoHotkeyDll.ahkTerminate(1000);
+            }
+        }
+
+        public void Reset() {
+            using (new CurrentDirectorySaver()) {
+                Terminate();
+                AutoHotkeyDll.ahkReload();
+                AutoHotkeyDll.ahktextdll("", "", "");
+            }
         }
 
         /// <summary>
@@ -88,7 +107,9 @@ namespace AutoHotkey.Interop
         /// </summary>
         public void Suspend()
         {
-            ExecRaw("Suspend, On");
+            using (new CurrentDirectorySaver()) {
+                ExecRaw("Suspend, On");
+            }
         }
 
         /// <summary>
@@ -96,7 +117,9 @@ namespace AutoHotkey.Interop
         /// </summary>
         public void UnSuspend()
         {
-            ExecRaw("Suspend, Off");
+            using (new CurrentDirectorySaver()) {
+                ExecRaw("Suspend, Off");
+            }
         }
 
         /// <summary>
@@ -125,12 +148,14 @@ namespace AutoHotkey.Interop
             string param9 = null,
             string param10 = null)
         {
-            IntPtr ret = AutoHotkeyDll.ahkFunction(functionName, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
+            using (new CurrentDirectorySaver()) {
+                IntPtr ret = AutoHotkeyDll.ahkFunction(functionName, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10);
 
-            if (ret == IntPtr.Zero)
-                return null;
-            else
-                return Marshal.PtrToStringUni(ret);
+                if (ret == IntPtr.Zero)
+                    return null;
+                else
+                    return Marshal.PtrToStringUni(ret);
+            }
         }
 
 
@@ -141,8 +166,10 @@ namespace AutoHotkey.Interop
         /// <returns>Returns true if the function exists, otherwise false.</returns>
         public bool FunctionExists(string functionName)
         {
-            IntPtr funcptr = AutoHotkeyDll.ahkFindFunc(functionName);
-            return funcptr != IntPtr.Zero;
+            using (new CurrentDirectorySaver()) {
+                IntPtr funcptr = AutoHotkeyDll.ahkFindFunc(functionName);
+                return funcptr != IntPtr.Zero;
+            }
         }
 
         /// <summary>
@@ -151,7 +178,9 @@ namespace AutoHotkey.Interop
         /// <param name="labelName">Name of the label.</param>
         public void ExecLabel(string labelName)
         {
-            AutoHotkeyDll.ahkLabel(labelName, false);
+            using (new CurrentDirectorySaver()) {
+                AutoHotkeyDll.ahkLabel(labelName, false);
+            }
         }
 
         /// <summary>
@@ -161,8 +190,10 @@ namespace AutoHotkey.Interop
         /// <returns>Returns true if the label exists, otherwise false</returns>
         public bool LabelExists(string labelName)
         {
-            IntPtr labelptr = AutoHotkeyDll.ahkFindLabel(labelName);
-            return labelptr != IntPtr.Zero;
+            using (new CurrentDirectorySaver()) {
+                IntPtr labelptr = AutoHotkeyDll.ahkFindLabel(labelName);
+                return labelptr != IntPtr.Zero;
+            }
         }
     }
 }
