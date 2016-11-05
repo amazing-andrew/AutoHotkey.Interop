@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="AutoHotkeyEngineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\CurrentDirectorySaverTests.cs" />
     <Compile Include="Util\EmbededAhkDllFilesTests.cs" />
     <Compile Include="Util\EmbededResourceHelperTests.cs" />
   </ItemGroup>
