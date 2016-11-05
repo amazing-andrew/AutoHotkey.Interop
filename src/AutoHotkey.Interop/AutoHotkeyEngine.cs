@@ -12,11 +12,15 @@ namespace AutoHotkey.Interop
     /// <summary>
     /// This class expects an AutoHotkey.dll to be available on the machine. (UNICODE) version.
     /// </summary>
-    public static class AutoHotkeyEngine
+    public class AutoHotkeyEngine
     {
-        static AutoHotkeyEngine() {
-                Util.AutoHotkeyDllLoader.EnsureDllIsLoaded();
-                AutoHotkeyDll.ahktextdll("", "", "");
+        public static AutoHotkeyEngine Instance { get { return lazyInstance.Value; } }
+        private static Lazy<AutoHotkeyEngine> lazyInstance =
+            new Lazy<AutoHotkeyEngine>(() => new AutoHotkeyEngine());
+
+        private AutoHotkeyEngine() {
+            Util.AutoHotkeyDllLoader.EnsureDllIsLoaded();
+            AutoHotkeyDll.ahktextdll("", "", "");
         }
 
         /// <summary>
@@ -24,7 +28,7 @@ namespace AutoHotkey.Interop
         /// </summary>
         /// <param name="variableName">Name of the variable.</param>
         /// <returns>Returns the value of the variable, or an empty string if the variable does not exist.</returns>
-        public static string GetVar(string variableName)
+        public string GetVar(string variableName)
         {
                 var p = AutoHotkeyDll.ahkgetvar(variableName, 0);
                 return Marshal.PtrToStringUni(p);
@@ -35,7 +39,7 @@ namespace AutoHotkey.Interop
         /// </summary>
         /// <param name="variableName">Name of the variable.</param>
         /// <param name="value">The value to set.</param>
-        public static void SetVar(string variableName, string value)
+        public void SetVar(string variableName, string value)
         {
                 if (value == null)
                     value = "";
@@ -48,7 +52,7 @@ namespace AutoHotkey.Interop
         /// </summary>
         /// <param name="code">The code to execute</param>
         /// <returns>Returns the result of an expression</returns>
-        public static string Eval(string code)
+        public string Eval(string code)
         {
                 var codeToRun = "A__EVAL:=" + code;
                 AutoHotkeyDll.ahkExec(codeToRun);
@@ -59,22 +63,22 @@ namespace AutoHotkey.Interop
         /// Loads a file into the running script
         /// </summary>
         /// <param name="filePath">The filepath of the script</param>
-        public static void LoadFile(string filePath) {
+        public void LoadFile(string filePath) {
             var absolute_file_path = Path.GetFullPath(filePath);
 
                 //AutoHotkeyDll.addFile(absolute_file_path, 1, 1);
                 string script = File.ReadAllText(filePath);
-                AutoHotkeyEngine.LoadScript(script);
+                this.LoadScript(script);
         }
 
-        public static void LoadScript(string scriptText) {
+        public void LoadScript(string scriptText) {
                 AutoHotkeyDll.addScript(scriptText, AutoHotkeyDll.Execute.RunWait);
         }
         /// <summary>
         /// Executes raw ahk code.
         /// </summary>
         /// <param name="code">The code to execute</param>
-        public static void ExecRaw(string code)
+        public void ExecRaw(string code)
         {
                 AutoHotkeyDll.ahkExec(code);
         }
@@ -82,12 +86,12 @@ namespace AutoHotkey.Interop
         /// <summary>
         /// Terminates the running scripts
         /// </summary>
-        public static void Terminate()
+        public void Terminate()
         {
                 AutoHotkeyDll.ahkTerminate(1000);
         }
 
-        public static void Reset() {
+        public void Reset() {
                 Terminate();
                 AutoHotkeyDll.ahkReload();
                 AutoHotkeyDll.ahktextdll("", "", "");
@@ -96,7 +100,7 @@ namespace AutoHotkey.Interop
         /// <summary>
         /// Suspends the scripts
         /// </summary>
-        public static void Suspend()
+        public void Suspend()
         {
                 ExecRaw("Suspend, On");
         }
@@ -104,7 +108,7 @@ namespace AutoHotkey.Interop
         /// <summary>
         /// Unsuspends the scripts
         /// </summary>
-        public static void UnSuspend()
+        public void UnSuspend()
         {
                 ExecRaw("Suspend, Off");
         }
@@ -123,7 +127,7 @@ namespace AutoHotkey.Interop
         /// <param name="param8">The 8th parameter</param>
         /// <param name="param9">The 9th parameter</param>
         /// <param name="param10">The 10 parameter</param>
-        public static string ExecFunction(string functionName,
+        public string ExecFunction(string functionName,
             string param1 = null,
             string param2 = null,
             string param3 = null,
@@ -149,7 +153,7 @@ namespace AutoHotkey.Interop
         /// </summary>
         /// <param name="functionName">Name of the function.</param>
         /// <returns>Returns true if the function exists, otherwise false.</returns>
-        public static bool FunctionExists(string functionName)
+        public bool FunctionExists(string functionName)
         {
                 IntPtr funcptr = AutoHotkeyDll.ahkFindFunc(functionName);
                 return funcptr != IntPtr.Zero;
@@ -159,7 +163,7 @@ namespace AutoHotkey.Interop
         /// Executes a label
         /// </summary>
         /// <param name="labelName">Name of the label.</param>
-        public static void ExecLabel(string labelName)
+        public void ExecLabel(string labelName)
         {
                 AutoHotkeyDll.ahkLabel(labelName, false);
         }
@@ -169,10 +173,20 @@ namespace AutoHotkey.Interop
         /// </summary>
         /// <param name="labelName">Name of the label.</param>
         /// <returns>Returns true if the label exists, otherwise false</returns>
-        public static bool LabelExists(string labelName)
+        public bool LabelExists(string labelName)
         {
                 IntPtr labelptr = AutoHotkeyDll.ahkFindLabel(labelName);
                 return labelptr != IntPtr.Zero;
+        }
+
+        /// <summary>
+        /// Enables communication between AutoHotkey code and the hosting enviorment.
+        /// This module imports an AHK function named SendPipeMessage that you can use
+        /// call the specified handler.
+        /// </summary>
+        /// <param name="sendPipeMessageHandler">The handler that will receive the SendPipesMessage from AHK.</param>
+        public void InitalizePipesModule(Func<string, string> sendPipeMessageHandler) {
+            Pipes.PipesModuleLoader.LoadPipesModule(sendPipeMessageHandler);
         }
     }
 }

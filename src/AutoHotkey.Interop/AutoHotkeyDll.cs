@@ -12,7 +12,7 @@ namespace AutoHotkey.Interop
     /// They assume AutoHotkey.dll is in the same directory as your
     /// executable.
     /// </summary>
-    internal class AutoHotkeyDll
+    internal static class AutoHotkeyDll
     {
         private const string DLLPATH = "AutoHotkey.dll";
 

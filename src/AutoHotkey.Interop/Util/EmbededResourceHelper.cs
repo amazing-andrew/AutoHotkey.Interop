@@ -34,7 +34,6 @@ namespace AutoHotkey.Interop.Util
             if (full_resource_name == null)
                 throw new FileNotFoundException(string.Format("Cannot find resource name of '{0}' in assembly '{1}'", embededResourceName, assembly.GetName().Name), embededResourceName);
 
-
             EnsureDirectoryExistsForFile(outputFilePath);
 
             using (var readStream = assembly.GetManifestResourceStream(full_resource_name))
@@ -42,6 +41,15 @@ namespace AutoHotkey.Interop.Util
                 readStream.CopyTo(writeStream);
                 readStream.Flush();
             }
+        }
+
+        public static string ExtractToText(Assembly assembly, string embededResourceName) {
+            string full_resource_name = FindByName(assembly, embededResourceName);
+            if (full_resource_name == null)
+                throw new FileNotFoundException(string.Format("Cannot find resource name of '{0}' in assembly '{1}'", embededResourceName, assembly.GetName().Name), embededResourceName);
+            using (var readStream = assembly.GetManifestResourceStream(full_resource_name))
+            using (StreamReader reader = new StreamReader(readStream))
+                return reader.ReadToEnd();
         }
 
         private static void EnsureDirectoryExistsForFile(string targetFileName) {

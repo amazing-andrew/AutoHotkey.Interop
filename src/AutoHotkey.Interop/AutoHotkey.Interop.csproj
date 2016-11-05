@@ -62,8 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AhkEscape.cs" />
     <Compile Include="AutoHotkeyDll.cs" />
     <Compile Include="AutoHotkeyEngine.cs" />
+    <Compile Include="Pipes\MessageHandlerPipeServer.cs" />
+    <Compile Include="Pipes\NamedPipeServer.cs" />
+    <Compile Include="Pipes\PipesModuleLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafeLibraryHandle.cs" />
     <Compile Include="Util\AutoHotkeyDllLoader.cs" />
@@ -76,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="x64\v2_AutoHotkey.dll" />
+    <EmbeddedResource Include="Pipes\pipeclient.ahk" />
     <None Include="x86\v2_AutoHotkey.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

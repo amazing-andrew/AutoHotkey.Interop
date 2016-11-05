@@ -12,49 +12,68 @@ namespace Example
     {
         static void Main(string[] args)
         {
+            //grab a copy of the AutoHotkey singleton instance
+            var ahk = AutoHotkeyEngine.Instance;
+
             //execute any raw ahk code
-            AutoHotkeyEngine.ExecRaw("MsgBox, Hello World!");
+            ahk.ExecRaw("MsgBox, Hello World!");
 
             //create new hotkeys
-            AutoHotkeyEngine.ExecRaw("^a::Send, Hello World");
+            ahk.ExecRaw("^a::Send, Hello World");
             
             //programmatically set variables
-            AutoHotkeyEngine.SetVar("x", "1");
-            AutoHotkeyEngine.SetVar("y", "4");
+            ahk.SetVar("x", "1");
+            ahk.SetVar("y", "4");
 
             //execute statements
-            AutoHotkeyEngine.ExecRaw("z:=x+y");
+            ahk.ExecRaw("z:=x+y");
 
             //return variables back from ahk
-            string zValue = AutoHotkeyEngine.GetVar("z");
+            string zValue = ahk.GetVar("z");
             Console.WriteLine("Value of z is {0}", zValue); // "Value of z is 5"
 
             //Load a library or exec scripts in a file
-            AutoHotkeyEngine.LoadFile("functions.ahk");
+            ahk.LoadFile("functions.ahk");
 
             //execute a specific function (found in functions.ahk), with 2 parameters
-            AutoHotkeyEngine.ExecFunction("MyFunction", "Hello", "World");
+            ahk.ExecFunction("MyFunction", "Hello", "World");
 
             //execute a label 
-            AutoHotkeyEngine.ExecLabel("DOSTUFF");
+            ahk.ExecLabel("DOSTUFF");
 
             //create a new function
             string sayHelloFunction = "SayHello(name) \r\n { \r\n MsgBox, Hello %name% \r\n return \r\n }";
-            AutoHotkeyEngine.ExecRaw(sayHelloFunction);
+            ahk.ExecRaw(sayHelloFunction);
 
             //execute's newly made function\
-            AutoHotkeyEngine.ExecRaw(@"SayHello(""Mario"") ");
+            ahk.ExecRaw(@"SayHello(""Mario"") ");
 
 
             //execute a function (in functions.ahk) that adds 5 and return results
-            var add5Results = AutoHotkeyEngine.Eval("Add5( 5 )");
+            var add5Results = ahk.Eval("Add5( 5 )");
             Console.WriteLine("Eval: Result of 5 with Add5 func is {0}", add5Results);
 
             //you can also return results with the ExecFunction 
-            add5Results = AutoHotkeyEngine.ExecFunction("Add5", "5");
+            add5Results = ahk.ExecFunction("Add5", "5");
             Console.WriteLine("ExecFunction: Result of 5 with Add5 func is {0}", add5Results);
 
-            
+            //you can have AutoHotkey communicate with the hosting enviorment 
+            //with by loading the pipes module and setting the handler
+            // 1 - Create Handler for your ahk code 
+            // 2 - Initalize Pipes Module, passing in your handler
+            // 3 - Use 'SendPipeMessage(string)' from your AHK code
+            var ipcHandler = new Func<string, string>(fromAhk => {
+                Console.WriteLine("received message from ahk " + fromAhk);
+                System.Threading.Thread.Sleep(3000); //simulating lots of work
+                return ".NET: I LIKE PIE!";
+            });
+
+            //the initalize pipes module only needs to be called once per application
+            ahk.InitalizePipesModule(ipcHandler); 
+
+            ahk.ExecRaw(@"serverResponce := SendPipeMessage(""Hello from ahk"")
+                          MsgBox, responce from server was -- %serverResponce% ");
+
             Console.WriteLine("Press enter to exit...");
             Console.ReadLine();
         }
