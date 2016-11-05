@@ -57,8 +57,7 @@ namespace Example
             add5Results = ahk.ExecFunction("Add5", "5");
             Console.WriteLine("ExecFunction: Result of 5 with Add5 func is {0}", add5Results);
 
-            //you can have AutoHotkey communicate with the hosting enviorment 
-            //with by loading the pipes module and setting the handler
+            //you can have AutoHotkey communicate with the hosting environment 
             // 1 - Create Handler for your ahk code 
             // 2 - Initalize Pipes Module, passing in your handler
             // 3 - Use 'SendPipeMessage(string)' from your AHK code
