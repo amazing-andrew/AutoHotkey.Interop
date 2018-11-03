@@ -29,6 +29,7 @@ namespace AutoHotkey.Interop.Util
         
 
         public static void ExtractToFile(Assembly assembly, string embededResourceName, string outputFilePath) {
+            if (File.Exists(outputFilePath)) return;
             string full_resource_name = FindByName(assembly, embededResourceName);
 
             if (full_resource_name == null)
