@@ -72,8 +72,8 @@ var ipcHandler = new Func<string, string>(fromAhk => {
 //the initalize pipes module only needs to be called once per application
 ahk.InitalizePipesModule(ipcHandler); 
 
-ahk.ExecRaw(@"serverResponce := SendPipeMessage(""Hello from ahk"")
-              MsgBox, responce from server was -- %serverResponce% ");
+ahk.ExecRaw(@"serverResponse := SendPipeMessage(""Hello from ahk"")
+              MsgBox, response from server was -- %serverResponse% ");
 
 ```
 
